@@ -7,7 +7,6 @@ class Accounts_model extends CI_Model
 
     public function get($uuid="",$page="",$rows_per_page="",$search_text="")
     {
-        echo $page;
         if(empty($uuid)){
             $this->db->select("a.*,c.company_name,u.name agent");
             $this->db->from("accounts a");
