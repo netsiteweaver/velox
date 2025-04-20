@@ -34,8 +34,9 @@ class Accounts_model extends CI_Model
             $query = $this->db->get();
             return $query->result();
         }else{
-            $this->db->select("a.*,u.name agent");
+            $this->db->select("a.*,u.name agent,c.company_name");
             $this->db->from("accounts a");
+            $this->db->join("customers c","c.customer_id = a.customer_id");
             $this->db->join("users u","u.id=a.created_by","left");
             $this->db->where(array("a.uuid"=>$uuid,"a.status"=>'1'));
             $query = $this->db->get();

@@ -4,7 +4,7 @@
             <div class="div">
                 <table id="latest_logins_table" class="table table-bordered">
                     <thead>
-                        <tr class='text-center'>
+                        <tr class='text-center thead-dark'>
                             <th>DATE</th>
                             <th>USERNAME / EMAIL</th>
                             <th>OS</th>

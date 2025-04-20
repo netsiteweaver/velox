@@ -4,7 +4,7 @@
             <div class="div">
                 <table id="latest_logins_table" class="table table-bordered">
                     <thead>
-                        <tr class='text-center'>
+                        <tr class='text-center thead-dark'>
                             <th>Created</th>
                             <th>Customer</th>
                             <th>Domain</th>
@@ -24,7 +24,7 @@
                             <td><?php echo $row->recipients;?></td>
                             <td><?php echo $row->date_sent;?></td>
                             <td>
-                                <div class="btn btn-default view-email"><i class="fa fa-eye"></i> View</div>
+                                <div class="btn btn-default btn-sm view-email"><i class="fa fa-eye"></i> View</div>
                             </td>
                         </tr>
                         <?php endforeach;?>
@@ -53,10 +53,6 @@
                     <td class='date_created'></td>
                 </tr>
                 <tr style='border-bottom:1px solid #ccc;'>
-                    <th style='border-right:1px solid #ccc;'>Date Sent</th>
-                    <td class='date_sent'></td>
-                </tr>
-                <tr style='border-bottom:1px solid #ccc;'>
                     <th style='border-right:1px solid #ccc;'>Sender Name</th>
                     <td class='sender_name'></td>
                 </tr>
@@ -71,6 +67,10 @@
                 <tr style='border-bottom:1px solid #ccc;'>
                     <th style='border-right:1px solid #ccc;vertical-align:top;'>Email</th>
                     <td style='padding: 10px;' class='content'></td>
+                </tr>
+                <tr style='border-bottom:1px solid #ccc;'>
+                    <th style='border-right:1px solid #ccc;'>Date Sent</th>
+                    <td class='date_sent'></td>
                 </tr>
             </tbody>
         </table>

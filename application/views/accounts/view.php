@@ -9,7 +9,7 @@
             <tbody>
                 <tr>
                     <th style='width:150px;'>Customer</th>
-                    <td></td>
+                    <td><?php echo $account->company_name;?></td>
                 </tr>
                 <tr>
                     <th>Domain</th>
