@@ -28,26 +28,31 @@ class Emailqueue extends MY_Controller
         redirect(base_url('emailqueue/listing'));
     }
 
-    // public function view()
-    // {
-    //     //Access Control 
-    //     if (!isAuthorised(get_class(), "view")) return false;
+    public function view()
+    {
+        //Access Control 
+        if (!isAuthorised(get_class(), "view")) return false;
 
-    //     $uuid = $this->uri->segment(3);
-    //     $this->data['account'] = $this->Emailqueue_model->get($uuid);
+        $uuid = $this->uri->segment(3);
+        $this->data['email'] = $this->Emailqueue_model->get($uuid);
+
+        if(empty($this->data['email'])) {
+            flashDanger("We are sorry. Failed to retrieve email");
+            redirect(base_url("emailqueue/listing?customer={$this->input->get('customer')}&domain={$this->input->get('domain')}&start_date={$this->input->get('start_date')}&end_date={$this->input->get('end_date')}"));
+        }
         
-    //     //Breadcrumbs
-    //     $this->mybreadcrumb->add('View', base_url('emailqueue/view'));
-    //     $this->data['breadcrumbs'] = $this->mybreadcrumb->render();
+        //Breadcrumbs
+        $this->mybreadcrumb->add('View', base_url('emailqueue/view'));
+        $this->data['breadcrumbs'] = $this->mybreadcrumb->render();
 
-    //     $this->data["content"] = $this->load->view("/emailqueue/view", $this->data, true);
-    //     $this->load->view("/layouts/default",$this->data);
-    // }
+        $this->data["content"] = $this->load->view("/emailqueue/view", $this->data, true);
+        $this->load->view("/layouts/default",$this->data);
+    }
 
     public function listing()
     {
         //Access Control        
-        // if (!isAuthorised(get_class(), "listing")) return false;
+        if (!isAuthorised(get_class(), "view")) return false;
 
         $this->load->model("system_model");
         $this->data['rows_per_page'] = empty($this->input->get("display"))?$this->system_model->getParam("rows_per_page"):$this->input->get("display");

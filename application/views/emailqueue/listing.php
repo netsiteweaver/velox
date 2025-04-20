@@ -42,7 +42,7 @@
                     <th>Delay</th>
                     <th>Customer</th>
                     <th>Domain</th>
-                    <th>Display Name</th>
+                    <th>From Name</th>
                     <th>Subject</th>
                     <th></th>
                 </tr>
@@ -75,7 +75,7 @@
                     <td><?php echo $row->subject;?></td>
                     <td>
                         <?php if($perms['view']):?>
-                        <a href="<?php echo base_url("accounts/view/".$row->uuid);?>">
+                        <a href="<?php echo base_url("emailqueue/view/".$row->uuid."?customer={$this->input->get('customer')}&domain={$this->input->get('domain')}&start_date={$this->input->get('start_date')}&end_date={$this->input->get('end_date')}");?>">
                             <div class="btn btn-default"><i class="fa fa-eye"></i> View</div>
                         </a>
                         <?php endif;?>

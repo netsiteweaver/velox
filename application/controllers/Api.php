@@ -54,7 +54,7 @@ class Api extends CI_Controller {
         $banner = '<table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width:800px;">
                         <tbody>
                             <tr>
-                                <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
+                                <td style="direction:ltr;font-size:0px;text-align:center;">
 
                                     <div class="mj-column-per-100 mj-outlook-group-fix"
                                         style="font-size:24px;text-align:center;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
@@ -62,7 +62,7 @@ class Api extends CI_Controller {
                                             style="vertical-align:top;" width="100%">
                                             <tbody>
                                                 <tr>
-                                                    <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                                    <td align="left" style="font-size:0px;word-break:break-word;">
                                                         <div
                                                             style="font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#434245;">
                                                             <img src="'.base_url().'assets/images/veloxmail-logo-horizontal-banner-800px.png"
