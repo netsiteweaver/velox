@@ -1,0 +1,8 @@
+application/config/development/config.php
+application/config/development/database.php
+
+application/logs/*.*
+*.zip
+
+uploads/users/*.*
+uploads/tasks/*.*

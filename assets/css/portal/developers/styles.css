@@ -1,0 +1,67 @@
+:root{
+    --customersPortalBackground: #a152d6;
+    --developersPortalBackground: #2cbfc6;
+}
+footer {
+    display: none;
+    padding: 5px;
+    background-color:#4c4c4c;
+    color: #fff;
+    text-align: center;
+    font-size: 0.8em;
+}
+ul.navbar-nav {
+    margin-left: 30px;;
+}
+.navbar-light .navbar-nav .nav-link {
+    border-bottom: 2px solid var(--developersPortalBackground);
+}
+.navbar-light .navbar-nav .nav-link{
+    letter-spacing: 2px;
+}
+.navbar-light .navbar-nav .nav-link.active, 
+.navbar-light .navbar-nav .show > .nav-link{
+    font-weight: bold !important;
+    background-color: var(--developersPortalBackground) !important;
+    color: #fff !important;
+    letter-spacing: 2px;
+    /* border-top-left-radius: 10px; */
+    /* border-top-right-radius: 10px; */
+}
+.logged-in-user {
+    position:absolute;
+    top: -40px;
+    right: 30px;
+    font-size: 0.8em;
+}
+@media only screen and (max-width:990px){
+    .logged-in-user {
+        position:absolute;
+        top: -40px;
+        right: 100px;
+        font-size: 0.7em;
+    }
+}
+a {
+    text-decoration: none !important;
+    color: #4c4c4c;
+}
+
+a:hover {
+    text-decoration: none !important;
+    color: #000;
+}
+.ionicon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.btn {
+    border-radius: 0px !important;
+}
+input[type=checkbox] {
+    width: 25px;
+    height: 25px;
+    margin: 10px;
+}
