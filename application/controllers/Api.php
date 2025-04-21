@@ -65,8 +65,10 @@ class Api extends CI_Controller {
                                                     <td align="left" style="font-size:0px;word-break:break-word;">
                                                         <div
                                                             style="font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#434245;">
-                                                            <img src="'.base_url().'assets/images/veloxmail-logo-horizontal-banner-800px.png"
+                                                            <a href=\'https://github.com/netsiteweaver/velox\'>
+                                                            <img src="'.base_url().'assets/images/veloxmail-logo-horizontal-banner-800px-2.png"
                                                                 alt="" style="width:100%">
+                                                            </a>
                                                         </div>
                                                     </td>
                                                 </tr>
