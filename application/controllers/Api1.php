@@ -25,7 +25,16 @@ class Api extends CI_Controller {
                 $var->account_id = $check;
                 $var->content = $var->content . $this->getBanner();
                 $var->date_created = date("Y-m-d H:i:s");
-                $this->db->insert('email_queue', $var);
+                $data = array(
+                    "uuid"          =>  $var->uuid,
+                    "date_created"  =>  $var->date_created,
+                    "sender_name"   =>  ($var->sender_name == null) ? '' : $var->sender_name,
+                    "recipients"    =>  $var->recipients,
+                    "subject"       =>  $var->subject,
+                    "content"       =>  $var->content,
+                    "date_sent"     =>  null
+                );
+                $this->db->insert('email_queue', $data);
             }else{
                 show_error('Unauthorized', 401);
             }
