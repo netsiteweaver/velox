@@ -11,6 +11,10 @@ class Api extends CI_Controller {
 
     public function queueEmail()
     {
+        $this->load->helper('string');
+        // Generate token
+        $tracking_code = random_string('alnum', 48);
+
         $headers = $this->input->request_headers();
         $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : 
                       (isset($headers['authorization']) ? $headers['authorization'] : null);
@@ -23,8 +27,9 @@ class Api extends CI_Controller {
                 $jsonData = file_get_contents('php://input');
                 $var = json_decode($jsonData);
                 $var->account_id = $check;
-                $var->content = $var->content . $this->getBanner();
+                $var->content = $var->content . $this->getBanner() . $this->addTracker($tracking_code);
                 $var->date_created = date("Y-m-d H:i:s");
+                $var->tracking_code = $tracking_code;
                 $this->db->insert('email_queue', $var);
 
                 header('Content-Type: application/json');
@@ -89,6 +94,12 @@ class Api extends CI_Controller {
                         </tbody>
                     </table>';
         return $banner;
+    }
+
+    private function addTracker($tracking_code)
+    {
+        $tracker = '<img src="' . base_url("track/email?token=$tracking_code") . ' width="1" height="1" style="border:1px solid #ccc" alt="" />';
+        return $tracker;
     }
 
 }

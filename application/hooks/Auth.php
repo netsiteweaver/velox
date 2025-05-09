@@ -17,6 +17,8 @@ class Auth extends CI_Controller {
 		$controller = $this->uri->segment(1);
 		$method = $this->uri->segment(2);
 
+		if($controller == 'track') return;
+
 		if($controller == "portal") {
 			if( ($this->uri->segment(2) == "customers") && ($this->uri->segment(3) != "signin") ){
 				if (empty($_SESSION['customer_id'])){
