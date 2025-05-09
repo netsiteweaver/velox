@@ -98,7 +98,7 @@ class Api extends CI_Controller {
 
     private function addTracker($tracking_code)
     {
-        $tracker = '<img src="' . base_url("track/email?token=$tracking_code") . ' width="1" height="1" style="border:1px solid #ccc" alt="" />';
+        $tracker = '<img src="' . base_url("track/email?token=$tracking_code") . '" width="1" height="1" style="border:1px solid #ccc" alt="" />';
         return $tracker;
     }
 
