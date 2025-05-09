@@ -38,19 +38,20 @@ class Cron extends CI_Controller {
                 $subject = $email->subject;
                 $message = $email->content;
                 $result = $this->email_model2->sendFromQueue($to,$subject,$message,$email->account_id,$email->cc,$email->sender_name);
-                if($result){
+                if($result[0]){
                     $this->stage($email->id,"sent");
                 }else{
-                    $this->stage($email->id,"failed");
+                    $this->stage($email->id,"failed",$result[1]);
                 }
             }
         }
     }
 
-    private function stage($id,$stage)
+    private function stage($id,$stage,$reason="")
     {
         $this->db->query("SET @@session.time_zone = '+04:00'");
         $this->db->set("stage",$stage);
+        if(!empty($reason)) $this->db->set("failed_reason",$reason);
         $this->db->set("date_sent","NOW()",false);
         $this->db->where("id",$id)->update("email_queue");
     }

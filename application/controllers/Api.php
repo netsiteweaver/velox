@@ -26,8 +26,16 @@ class Api extends CI_Controller {
                 $var->content = $var->content . $this->getBanner();
                 $var->date_created = date("Y-m-d H:i:s");
                 $this->db->insert('email_queue', $var);
+
+                header('Content-Type: application/json');
+                http_response_code(200);
+                echo json_encode(['status' => true, 'email_id' => $this->db->insert_id()]);
+                exit;
             }else{
-                show_error('Unauthorized', 401);
+                header('Content-Type: application/json');
+                http_response_code(401);
+                echo json_encode(['status' => false, 'message' => 'Invalid Token']);
+                exit;
             }
         } else {
             // No token found
@@ -45,8 +53,8 @@ class Api extends CI_Controller {
                         ->where("a.status", 1)
                         ->where("c.status", 1)
                         ->get()->row();
-        // return ($check) ? true : false;
-        return $check->id;
+        return ($check) ? $check->id : null;
+        // return $check->id;
     }
 
     private function getBanner()
