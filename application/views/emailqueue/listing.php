@@ -54,6 +54,7 @@
                     <th>From Name</th>
                     <th>Subject</th>
                     <th>Recipient</th>
+                    <th>Opened</th>
                     <th></th>
                 </tr>
             </thead>
@@ -84,6 +85,11 @@
                     <td><?php echo $row->sender_name;?></td>
                     <td><?php echo $row->subject;?></td>
                     <td><?php echo $row->recipients;?></td>
+                    <?php if($row->opened == "1"):?>
+                    <td title="<?php echo "Opened on {$row->opened_date} from {$row->opened_ip} on {$row->opened_device}"; ?>">Yes</td>
+                    <?php else:?>
+                    <td>Not Yet</td>
+                    <?php endif;?>
                     <td>
                         <?php if($perms['view']):?>
                         <a href="<?php echo base_url("emailqueue/view/".$row->uuid."?customer={$this->input->get('customer')}&domain={$this->input->get('domain')}&start_date={$this->input->get('start_date')}&end_date={$this->input->get('end_date')}");?>">
