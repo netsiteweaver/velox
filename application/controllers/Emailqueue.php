@@ -64,12 +64,14 @@ class Emailqueue extends MY_Controller
                                         $this->data['rows_per_page'],
                                         $this->input->get('customer'),
                                         $this->input->get('domain'),
+                                        $this->input->get('recipients'),
                                         $this->input->get('start_date'),
                                         $this->input->get('end_date'),
                                         $this->input->get('search_text')
                                     );
         $total_records = $this->Emailqueue_model->total_records($this->input->get('customer'),
                                                                 $this->input->get('domain'),
+                                                                $this->input->get('recipients'),
                                                                 $this->input->get('start_date'),
                                                                 $this->input->get('end_date'),
                                                                 $this->input->get('search_text'));
@@ -85,6 +87,10 @@ class Emailqueue extends MY_Controller
                                                         FROM email_queue eq 
                                                         LEFT JOIN accounts a ON a.id = eq.account_id 
                                                         LEFT JOIN customers c ON c.customer_id = a.customer_id")->result();
+        $this->data['recipients'] = $this->db->query("SELECT DISTINCT eq.recipients
+                                                        FROM email_queue eq 
+                                                        LEFT JOIN accounts a ON a.id = eq.account_id 
+                                                        LEFT JOIN customers c ON c.customer_id = a.customer_id")->result();                                                        
 
         //Breadcrumbs
         $this->data['breadcrumbs'] = $this->mybreadcrumb->render();

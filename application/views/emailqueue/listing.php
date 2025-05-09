@@ -19,6 +19,15 @@
             </select>
         </div>
         <div class="col-md-2">
+            <label for="">Recipient</label>
+            <select name="recipients" class="form-control monitor">
+                <option value="">Select Recipient</option>
+                <?php foreach($recipients as $row):?>
+                <option value="<?php echo $row->recipients;?>" <?php echo ($this->input->get('recipients') == $row->recipients) ? 'selected' : ''; ?>><?php echo $row->recipients;?></option>
+                <?php endforeach;?>
+            </select>
+        </div>
+        <div class="col-md-2">
             <label for="">From Date</label>
             <input class="form-control monitor" name="start_date" type="date" value="<?php echo (!empty($this->input->get("start_date"))) ? $this->input->get("start_date") : date("Y-m-d");?>">
         </div>
@@ -44,6 +53,7 @@
                     <th>Domain</th>
                     <th>From Name</th>
                     <th>Subject</th>
+                    <th>Recipient</th>
                     <th></th>
                 </tr>
             </thead>
@@ -65,7 +75,7 @@
                 }
                 ?>
                 <tr>
-                    <td><?php echo $row->id;?></td>
+                    <td><?php echo substr($row->uuid,0,8);?></td>
                     <td><?php echo $row->date_created;?></td>
                     <td><?php echo ($row->date_sent == null)?'pending':$row->date_sent;?></td>
                     <td><?php echo $diff;?></td>
@@ -73,6 +83,7 @@
                     <td><?php echo $row->domain;?></td>
                     <td><?php echo $row->sender_name;?></td>
                     <td><?php echo $row->subject;?></td>
+                    <td><?php echo $row->recipients;?></td>
                     <td>
                         <?php if($perms['view']):?>
                         <a href="<?php echo base_url("emailqueue/view/".$row->uuid."?customer={$this->input->get('customer')}&domain={$this->input->get('domain')}&start_date={$this->input->get('start_date')}&end_date={$this->input->get('end_date')}");?>">

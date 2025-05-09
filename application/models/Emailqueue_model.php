@@ -32,7 +32,7 @@ class Emailqueue_model extends CI_Model{
                         ->row();
     }
 
-    public function get($uuid="",$page="",$rows_per_page="",$customer="",$domain="",$start_date="",$end_date="",$search_text="")
+    public function get($uuid="",$page="",$rows_per_page="",$customer="",$domain="",$recipients="",$start_date="",$end_date="",$search_text="")
     {
         if(empty($uuid)){
             $this->db->select("e.*,a.domain,c.company_name");
@@ -41,6 +41,7 @@ class Emailqueue_model extends CI_Model{
             $this->db->join("customers c","c.customer_id = a.customer_id","left");
             if(!empty($customer)) $this->db->where('c.company_name',$customer);
             if(!empty($domain)) $this->db->where('a.domain',$domain);
+            if(!empty($recipients)) $this->db->where('e.recipients',$recipients);
             if(!empty($start_date)) $this->db->where('DATE(e.date_sent) >=',$start_date);
             if(!empty($end_date)) $this->db->where('DATE(e.date_sent) <=',$end_date);
             
@@ -51,6 +52,7 @@ class Emailqueue_model extends CI_Model{
             $this->db->limit($rows_per_page,$offset);
             $query = $this->db->get();
             $result = $query->result();
+            // debug($this->db->last_query());
             return $result;
         }else{
             $this->db->select("e.*,a.domain,c.company_name");
@@ -64,7 +66,7 @@ class Emailqueue_model extends CI_Model{
 
     }
 
-    public function total_records($customer="",$domain="",$start_date="",$end_date="",$search_text="")
+    public function total_records($customer="",$domain="",$recipients="",$start_date="",$end_date="",$search_text="")
     {
 
         $this->db->select("count(e.id) as ct");
@@ -73,6 +75,7 @@ class Emailqueue_model extends CI_Model{
         $this->db->join("customers c","c.customer_id = a.customer_id","left");
         if(!empty($customer)) $this->db->where('c.company_name',$customer);
         if(!empty($domain)) $this->db->where('a.domain',$domain);
+        if(!empty($recipients)) $this->db->where('e.recipients',$recipients);
         if(!empty($start_date)) $this->db->where('DATE(e.date_sent) >=',$start_date);
         if(!empty($end_date)) $this->db->where('DATE(e.date_sent) <=',$end_date);
 
