@@ -410,20 +410,20 @@ class System_model extends CI_Model {
 
     public function updatenotifications()
     {
-        $notif = json_encode(!empty($this->input->post("data"))?$this->input->post("data"):[]);
+        $notif = json_encode(!empty($this->input->post("data")) ? $this->input->post("data") : array());
         $type = $this->input->post("type");
-        $this->db->set("value", $notif)->where("title","notification_".$type)->update("params");
+        $this->setParam("notification_" . $type, $notif);
     }
 
     public function updateAllNotifications()
     {
-        $notifs = [];
-        foreach($_POST['notifications'] as $n){
+        $notifs = array();
+        foreach ($this->input->post('notifications') as $n) {
             $notifs[$n['type']][] = $n['user_id'];
         }
 
-        foreach($notifs as $key => $value){
-            $this->db->set("value", json_encode($value) )->where("title","notification_".$key)->update("params");
+        foreach ($notifs as $key => $value) {
+            $this->setParam("notification_" . $key, json_encode($value));
         }
     }
 

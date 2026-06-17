@@ -1,365 +1,94 @@
+<?php
+$events = array(
+    array(
+        'key' => 'create_account',
+        'title' => 'Account Created',
+        'class' => 'bg-teal',
+        'notes' => 'Notify selected admins when a new VeloxMail account is created.',
+    ),
+    array(
+        'key' => 'update_account',
+        'title' => 'Account Updated',
+        'class' => 'bg-orange',
+        'notes' => 'Notify selected admins when an account is updated or renewed.',
+    ),
+    array(
+        'key' => 'delete_account',
+        'title' => 'Account Deleted',
+        'class' => 'bg-danger',
+        'notes' => 'Notify selected admins when an account is deleted.',
+    ),
+    array(
+        'key' => 'account_expiring',
+        'title' => 'Account Expiring',
+        'class' => 'bg-yellow',
+        'notes' => 'Notify selected admins when customer expiry reminders are sent.',
+    ),
+    array(
+        'key' => 'email_failed',
+        'title' => 'Email Delivery Failed',
+        'class' => 'bg-maroon',
+        'notes' => 'Notify selected admins when a queued email fails to send.',
+    ),
+);
+?>
 <div class="row">
     <div class="col-md-12 text-center">
-        <p>Notifications are automatically sent to concerned users, developers or customers for any of the events listed below. What is defined here is for the admins that still need to get notified, like project managers or team lead.</p>
+        <p>Choose which admin users should receive email notifications for VeloxMail events below. Customer expiry reminders are always sent to the customer; selections here receive an admin copy.</p>
     </div>
 </div>
 
+<?php foreach ($events as $event): ?>
+<?php $recipients = isset($notifications[$event['key']]) ? $notifications[$event['key']] : array(); ?>
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-9">
+    <div class="col-lg-8 col-md-10">
         <div class="card">
-            <div class="card-header bg-teal">
-                <h3 class="card-title">Create Project</h3>
-                
+            <div class="card-header <?php echo $event['class']; ?>">
+                <h3 class="card-title"><?php echo $event['title']; ?></h3>
             </div>
             <div class="card-body">
-                <p class="notes">Define who will receive email notification when a Project is created</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="create_project" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo ($user->created);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$create_project)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
+                <p class="notes"><?php echo $event['notes']; ?></p>
+                <table id="<?php echo $event['key']; ?>" class="table table-bordered table-hover process">
+                    <thead>
+                        <tr>
+                            <th style="width:60px;">Photo</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th style="width:80px;" class="text-center">Notify</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($users as $user): ?>
+                        <tr data-user="<?php echo $user->id; ?>">
+                            <td class="text-center">
+                                <?php if (!empty($user->photo)): ?>
+                                <img style="width:40px;height:40px;border-radius:50%;object-fit:cover;" src="<?php echo base_url('uploads/users/' . $user->photo); ?>" alt="">
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo htmlspecialchars($user->name); ?></td>
+                            <td><?php echo htmlspecialchars($user->email); ?></td>
+                            <td class="text-center">
+                                <input type="checkbox" name="<?php echo $user->id; ?>" <?php echo in_array($user->id, $recipients) ? 'checked' : ''; ?>>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
             <div class="card-footer">
-                <div class="btn bg-teal updatenotifications" id="" data-type="create_project"><i class="fa fa-save"></i> Save for Create Project</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-9">
-        <div class="card">
-            <div class="card-header bg-orange">
-                <h3 class="card-title">Update Project</h3>
-                
-            </div>
-            <div class="card-body">
-                <p class="notes">Define who will receive email notification when a Project is updated</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="update_project" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo ($user->created);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$update_project)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="btn bg-orange updatenotifications" id="" data-type="update_project"><i class="fa fa-save"></i> Save for Update Project</div>
+                <button type="button" class="btn <?php echo $event['class']; ?> updatenotifications" data-type="<?php echo $event['key']; ?>">
+                    <i class="fa fa-save"></i> Save for <?php echo $event['title']; ?>
+                </button>
             </div>
         </div>
     </div>
 </div>
-<hr>
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-9">
-        <div class="card">
-            <div class="card-header bg-navy">
-                <h3 class="card-title">Create Sprint</h3>
-                
-            </div>
-            <div class="card-body">
-                <p class="notes">Define who will receive email notification when a Sprint is created</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="create_sprint" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo ($user->created);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$create_sprint)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="btn bg-navy updatenotifications" id="" data-type="create_sprint"><i class="fa fa-save"></i> Save for Create Sprint</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-9">
-        <div class="card">
-            <div class="card-header bg-purple">
-                <h3 class="card-title">Update Sprint</h3>
-                
-            </div>
-            <div class="card-body">
-                <p class="notes">Define who will receive email notification when a Sprint is updated</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="update_sprint" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>PHOTO</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo ($user->created);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$update_sprint)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="btn bg-purple updatenotifications" id="" data-type="update_sprint"><i class="fa fa-save"></i> Save for Update Sprint</div>
-            </div>
-        </div>
-    </div>
-</div>
-<hr>
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-9">
-        <div class="card">
-            <div class="card-header bg-yellow">
-                <h3 class="card-title">Create Task</h3>
-                
-            </div>
-            <div class="card-body">
-                <p class="notes">Define who will receive email notification when a Task is created</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="create_task" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>PHOTO</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo ($user->created);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$create_task)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="btn bg-yellow updatenotifications" id="" data-type="create_task"><i class="fa fa-save"></i> Save for Create Task</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-9">
-        <div class="card">
-            <div class="card-header bg-info">
-                <h3 class="card-title">Update Task</h3>
-                
-            </div>
-            <div class="card-body">
-                <p class="notes">Define who will receive email notification when a Task is updated</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="update_task" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>PHOTO</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo strtoupper($user->user_type);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$update_task)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="btn bg-info updatenotifications" id="" data-type="update_task"><i class="fa fa-save"></i> Save for Update Task</div>
-            </div>
-        </div>
-    </div>
-</div>
+<?php endforeach; ?>
 
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-9">
-        <div class="card">
-            <div class="card-header bg-green">
-                <h3 class="card-title">Note Added</h3>
-                
-            </div>
-            <div class="card-body">
-                <p class="notes">Define who will receive email notification when a note is added</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="add_notes" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>PHOTO</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo ($user->created);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$add_notes)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="btn bg-yellow updatenotifications" id="" data-type="add_notes"><i class="fa fa-save"></i> Save for Create Task</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-9">
-        <div class="card">
-            <div class="card-header bg-danger">
-                <h3 class="card-title">Note Deleted</h3>
-                
-            </div>
-            <div class="card-body">
-                <p class="notes">Define who will receive email notification when a Note is deleted</p>
-                <form id="form" role="form" action="#<?php //echo base_url('settings/updatenotifications'); ?>" method="post">
-                    <table id="delete_notes" class="table table-bordered table-hover process">
-                        <thead>
-                            <th>PHOTO</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>CREATED ON</th>
-                            <th></th>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($users as $user):?>
-                            <tr data-user='<?php echo $user->id;?>'>
-                                <th class='text-center'>
-                                    <?php if(!empty($user->photo)) :?>
-                                    <img style='width:50px;' class='' src="uploads/users/<?php echo $user->photo;?>" alt="">
-                                    <?php endif;?>
-                                </th>
-                                <td><?php echo $user->name;?></td>
-                                <td><?php echo $user->email;?></td>
-                                <td><?php echo strtoupper($user->user_type);?></td>
-                                <td>
-                                    <input type="checkbox" class='pull-right' name="<?php echo $user->id;?>" <?php echo (in_array($user->id,$delete_notes)) ? 'checked' : '';?>>
-                                </td>
-                            </tr>
-                            <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <div class="card-footer">
-                <div class="btn bg-info updatenotifications" id="" data-type="delete_notes"><i class="fa fa-save"></i> Save for Update Task</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-5"></div>
-    <div class="col-md-2">
-        <div class="btn btn-block btn-outline-info" id='updateAll'><i class="fa fa-save"></i> Update All</div>
+    <div class="col-md-8 col-md-offset-2 col-lg-8">
+        <button type="button" class="btn btn-block btn-outline-info" id="updateAll">
+            <i class="fa fa-save"></i> Save All Notifications
+        </button>
     </div>
 </div>

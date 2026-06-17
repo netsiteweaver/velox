@@ -116,50 +116,58 @@ class Settings extends MY_Controller {
     {
         //Access Control
         if(!isAuthorised(get_class(),"notifications")) return false;
-        
-        $this->data['create_project'] = $this->system_model->getParam("notification_create_project",true);
-        $this->data['update_project'] = $this->system_model->getParam("notification_update_project",true);
-        $this->data['create_sprint'] = $this->system_model->getParam("notification_create_sprint",true);
-        $this->data['update_sprint'] = $this->system_model->getParam("notification_update_sprint",true);
-        $this->data['create_task'] = $this->system_model->getParam("notification_create_task",true);
-        $this->data['update_task'] = $this->system_model->getParam("notification_update_task",true);
-        $this->data['add_notes'] = $this->system_model->getParam("notification_add_notes",true);
-        $this->data['delete_notes'] = $this->system_model->getParam("notification_delete_notes",true);
 
-        
+        $notification_keys = array(
+            'create_account',
+            'update_account',
+            'delete_account',
+            'account_expiring',
+            'email_failed',
+        );
+
+        $this->data['notifications'] = array();
+        foreach ($notification_keys as $key) {
+            $value = $this->system_model->getParam("notification_" . $key, true);
+            $this->data['notifications'][$key] = is_array($value) ? $value : array();
+        }
+
         $this->mybreadcrumb->add('Notifications', base_url('settings/notifications'));
         $this->data['breadcrumbs'] = $this->mybreadcrumb->render();
+        $this->data['page_title'] = 'Notifications';
 
         $this->load->model('users_model');
-        $this->data['admins'] = $this->users_model->getAdmins();
-
-        $this->load->model("users_model");
-        $this->data['users'] = $this->users_model->lookup("regular");
+        $this->data['users'] = $this->users_model->lookup('regular');
 
         $this->data["content"]=$this->load->view("/settings/notifications",$this->data,true);
-        $this->load->view("/layouts/default",$this->data);        
+        $this->load->view("/layouts/default",$this->data);
     }
 
     public function updatenotifications()
     {
-        //Access Control
-        if(!isAuthorised("settings","params")) return false;
+        if(!isAuthorised(get_class(),"notifications", false)) {
+            echo json_encode(array("result" => false, "reason" => "Not authorized"));
+            exit;
+        }
 
         $this->load->model("system_model");
         $this->system_model->updatenotifications();
 
-        echo json_encode(array("result",true));
+        echo json_encode(array("result" => true));
+        exit;
     }
 
     public function updateAllNotifications()
     {
-        //Access Control
-        if(!isAuthorised("settings","params")) return false;
+        if(!isAuthorised(get_class(),"notifications", false)) {
+            echo json_encode(array("result" => false, "reason" => "Not authorized"));
+            exit;
+        }
 
         $this->load->model("system_model");
         $this->system_model->updateAllNotifications();
 
-        echo json_encode(array("result",true));
+        echo json_encode(array("result" => true));
+        exit;
     }
 
     public function updatenotifications2()

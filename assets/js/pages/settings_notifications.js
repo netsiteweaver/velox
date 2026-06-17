@@ -17,7 +17,11 @@ jQuery(function(){
 			dataType: 'JSON',
 			data: {data:notifications, type:type},
 			success: function(response) {
-				window.location.reload();
+				if (response.result) {
+					toastr.success('Notifications saved.');
+				} else {
+					toastr.error(response.reason || 'Failed to save notifications.');
+				}
 			},
 			complete: function() {
 
@@ -49,7 +53,11 @@ jQuery(function(){
 			dataType: 'JSON',
 			data: {notifications},
 			success: function(response) {
-				window.location.reload();
+				if (response.result) {
+					toastr.success('All notifications saved.');
+				} else {
+					toastr.error(response.reason || 'Failed to save notifications.');
+				}
 			},
 			complete: function() {
 
