@@ -81,6 +81,7 @@ class Accounts_model extends CI_Model
         $this->db->set("customer_id",$this->input->post("customer_id"));
         $this->db->set("token",$this->input->post("token"));
         $this->db->set("domain",$this->input->post("domain"));
+        $this->db->set("start_date",$this->input->post("start_date"));
         $this->db->set("valid_until",$this->input->post("valid_until"));
         $this->db->set("hostname",$_POST['hostname']);
         $this->db->set("username",$_POST['username']);
@@ -105,6 +106,8 @@ class Accounts_model extends CI_Model
             }
             $_POST['uuid'] = $uuid;
         }else{
+            $this->db->set("expiry_reminder_7_sent_at", NULL);
+            $this->db->set("expiry_reminder_1_sent_at", NULL);
             $this->db->where("uuid",$this->input->post("uuid"));
             $this->db->update("accounts");
             $check = $this->db->error();
@@ -145,6 +148,42 @@ class Accounts_model extends CI_Model
     public function lookup()
     {
         return $this->db->select("customer_id,uuid,company_name,full_name")->from("accounts")->order_by('company_name, full_name')->where("status","1")->get()->result();
+    }
+
+    public function getExpiringForReminder($days_before)
+    {
+        $days_before = intval($days_before);
+        if (!in_array($days_before, array(7, 1), true)) {
+            return array();
+        }
+
+        $sent_column = "expiry_reminder_{$days_before}_sent_at";
+
+        $this->db->query("SET @@session.time_zone = '+04:00'");
+        $this->db->select("a.*, c.company_name, c.email as customer_email");
+        $this->db->from("accounts a");
+        $this->db->join("customers c", "c.customer_id = a.customer_id");
+        $this->db->where("a.status", "1");
+        $this->db->where("c.status", "1");
+        $this->db->where("c.email !=", "");
+        $this->db->where("a.{$sent_column} IS NULL", NULL, FALSE);
+        $this->db->where("DATE(a.valid_until) = DATE_ADD(CURDATE(), INTERVAL {$days_before} DAY)", NULL, FALSE);
+        $this->db->order_by("a.valid_until");
+        return $this->db->get()->result();
+    }
+
+    public function markExpiryReminderSent($account_id, $days_before)
+    {
+        $days_before = intval($days_before);
+        if (!in_array($days_before, array(7, 1), true)) {
+            return false;
+        }
+
+        $sent_column = "expiry_reminder_{$days_before}_sent_at";
+        $this->db->set($sent_column, date("Y-m-d H:i:s"));
+        $this->db->where("id", $account_id);
+        $this->db->update("accounts");
+        return true;
     }
 
 }

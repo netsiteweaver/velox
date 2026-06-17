@@ -4,13 +4,20 @@
         <div class="col-md-4">
             <h5>Account Details</h5>
             <div class="form-group">
-                <label for=""></label>
-                <select name="customer_id" id="" class="form-control" required autofocus>
-                    <option value="">Customer</option>
-                    <?php foreach($customers as $customer):?>
-                    <option value="<?php echo $customer->customer_id;?>"><?php echo $customer->company_name;?></option>
-                    <?php endforeach;?>
-                </select>
+                <label for="customer_id">Customer</label>
+                <div class="input-group">
+                    <select name="customer_id" id="customer_id" class="form-control" required autofocus>
+                        <option value="">Select Customer</option>
+                        <?php foreach($customers as $customer):?>
+                        <option value="<?php echo $customer->customer_id;?>"><?php echo $customer->company_name;?></option>
+                        <?php endforeach;?>
+                    </select>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalAddCustomer" title="Add new customer">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </span>
+                </div>
             </div>
             <div class="form-group">
                 <label for="">Token</label>
@@ -23,9 +30,22 @@
             </div>
 
             <div class="form-group">
-                <label for="">Valid Until</label>
-                <input class="form-control" name="valid_until" type="date" placeholder=""
-                    value="<?php echo date("Y-m-d", strtotime('+1 year'));?>" required>
+                <label for="start_date">Start Date</label>
+                <input class="form-control" name="start_date" id="start_date" type="date"
+                    value="<?php echo date('Y-m-d');?>" required>
+            </div>
+            <div class="form-group">
+                <label for="validity_years">Validity</label>
+                <select id="validity_years" class="form-control">
+                    <option value="1" selected>1 Year</option>
+                    <option value="2">2 Years</option>
+                    <option value="3">3 Years</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="valid_until">Valid Until</label>
+                <input class="form-control" name="valid_until" id="valid_until" type="date" placeholder=""
+                    value="<?php echo date("Y-m-d", strtotime('+1 year'));?>" required readonly>
             </div>
         </div>
         <div class="col-md-4">
@@ -67,3 +87,4 @@
         </div>
     </div>
 </form>
+<?php $this->load->view('modals/modalAddCustomerSimple'); ?>

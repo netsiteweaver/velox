@@ -243,6 +243,11 @@ class Customers extends MY_Controller
 
     public function quick_save()
     {
+        if (!isAuthorised("customers", "add", false) && !isAuthorised("accounts", "add", false)) {
+            echo json_encode(array("result" => false, "reason" => "Not authorized"));
+            exit;
+        }
+
         $result = $this->customers_model->quick_save();
         echo json_encode($result);
         exit;

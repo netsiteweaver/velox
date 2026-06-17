@@ -12,18 +12,22 @@
                 <tr>
                     <th>Customer</th>
                     <th>Domain</th>
-                    <th>Created</th>
+                    <th>Start Date</th>
                     <th>Valid Until</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach($accounts as $account):?>
-                <tr>
+                <?php $is_expired = substr($account->valid_until, 0, 10) < date('Y-m-d'); ?>
+                <tr<?php echo $is_expired ? ' class="table-danger"' : ''; ?>>
                     <td><?php echo $account->company_name;?></td>
                     <td><?php echo $account->domain;?></td>
-                    <td><?php echo date_format(date_create($account->created_on),'Y-m-d');?></td>
-                    <td><?php echo date_format(date_create($account->valid_until),'Y-m-d');?></td>
+                    <td><?php echo date_format(date_create(!empty($account->start_date) ? $account->start_date : $account->created_on),'Y-m-d');?></td>
+                    <td>
+                        <?php echo date_format(date_create($account->valid_until),'Y-m-d');?>
+                        <?php if ($is_expired): ?><span class="badge badge-danger ml-1">Expired</span><?php endif; ?>
+                    </td>
                     <td>
                         <?php if($perms['view']):?>
                         <a href="<?php echo base_url("accounts/view/".$account->uuid);?>">

@@ -25,8 +25,28 @@
             </div>
 
             <div class="form-group">
-                <label for="">Valid Until</label>
-                <input class="form-control" name="valid_until" type="date" placeholder="" value="<?php echo substr($account->valid_until,0,10);?>" required>
+                <label for="start_date">Start Date</label>
+                <input class="form-control" name="start_date" id="start_date" type="date" placeholder=""
+                    value="<?php echo substr(!empty($account->start_date) ? $account->start_date : $account->created_on, 0, 10);?>" required>
+                <p class="notes">&nbsp;</p>
+            </div>
+            <?php
+                $start_ts = strtotime(substr(!empty($account->start_date) ? $account->start_date : $account->created_on, 0, 10));
+                $end_ts = strtotime(substr($account->valid_until, 0, 10));
+                $validity_years = max(1, min(3, (int) round(($end_ts - $start_ts) / (365.25 * 86400))));
+            ?>
+            <div class="form-group">
+                <label for="validity_years">Validity</label>
+                <select id="validity_years" class="form-control">
+                    <option value="1" <?php echo ($validity_years == 1) ? 'selected' : ''; ?>>1 Year</option>
+                    <option value="2" <?php echo ($validity_years == 2) ? 'selected' : ''; ?>>2 Years</option>
+                    <option value="3" <?php echo ($validity_years == 3) ? 'selected' : ''; ?>>3 Years</option>
+                </select>
+                <p class="notes">&nbsp;</p>
+            </div>
+            <div class="form-group">
+                <label for="valid_until">Valid Until</label>
+                <input class="form-control" name="valid_until" id="valid_until" type="date" placeholder="" value="<?php echo substr($account->valid_until,0,10);?>" required readonly>
                 <p class="notes">&nbsp;</p>
             </div>
         </div>

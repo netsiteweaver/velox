@@ -192,4 +192,51 @@ class Customers_model extends CI_Model
         return $this->db->select("customer_id,uuid,company_name")->from("customers")->order_by('company_name')->where("status","1")->get()->result();
     }
 
+    public function quick_save()
+    {
+        $valid = true;
+        $error_message = "";
+
+        if (empty($this->input->post("company_name"))) {
+            $error_message .= "Company Name is Mandatory<br>";
+            $valid = false;
+        }
+        if (empty($this->input->post("email"))) {
+            $error_message .= "Email is Mandatory<br>";
+            $valid = false;
+        }
+        if (!$valid) {
+            return array("result" => false, "reason" => $error_message);
+        }
+
+        $this->db->set("company_name", $this->input->post("company_name"));
+        $this->db->set("address", $this->input->post("address"));
+        $this->db->set("email", $this->input->post("email"));
+        $this->db->set("phone_number1", $this->input->post("phone_number1"));
+        $this->db->set("remarks", $this->input->post("remarks"));
+        $this->db->set("status", "1");
+
+        $uuid = gen_uuid();
+        $this->db->set("uuid", $uuid);
+        $this->db->set("created_by", $_SESSION['user_id']);
+        $this->db->set("created_date", "NOW()", FALSE);
+
+        $db_debug = $this->db->db_debug;
+        $this->db->db_debug = FALSE;
+        $this->db->insert("customers");
+        $check = $this->db->error();
+        $this->db->db_debug = $db_debug;
+
+        if ($check['code'] > 0) {
+            return array("result" => false, "reason" => $check['message']);
+        }
+
+        return array(
+            "result" => true,
+            "customer_id" => $this->db->insert_id(),
+            "company_name" => $this->input->post("company_name"),
+            "uuid" => $uuid,
+        );
+    }
+
 }

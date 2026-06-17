@@ -106,4 +106,45 @@ class Cron extends CI_Controller {
         
     }
 
+    public function notifyExpiringAccounts()
+    {
+        $this->load->model("accounts_model");
+        $this->load->model("Email_model3");
+        $this->load->model("system_model");
+
+        $companyInfo = $this->system_model->getCompanyInfo();
+
+        foreach (array(7, 1) as $days_before) {
+            $accounts = $this->accounts_model->getExpiringForReminder($days_before);
+            if (empty($accounts)) {
+                continue;
+            }
+
+            foreach ($accounts as $account) {
+                if (empty($account->customer_email)) {
+                    continue;
+                }
+
+                $valid_until = date('Y-m-d', strtotime($account->valid_until));
+
+                $emailData = array(
+                    'account' => $account,
+                    'days_remaining' => $days_before,
+                    'valid_until' => $valid_until,
+                    'logo' => $this->system_model->getParam("logo"),
+                    'companyInfo' => $companyInfo,
+                    'show_lifecycle' => false,
+                );
+
+                $content = $this->load->view("_email/header", $emailData, true);
+                $content .= $this->load->view("_email/accountExpiring", $emailData, true);
+                $content .= $this->load->view("_email/footer", array(), true);
+
+                $subject = "Your VeloxMail account for {$account->domain} expires in {$days_before} day" . ($days_before == 1 ? '' : 's');
+                $this->Email_model3->save($account->customer_email, $subject, $content);
+                $this->accounts_model->markExpiryReminderSent($account->id, $days_before);
+            }
+        }
+    }
+
 }

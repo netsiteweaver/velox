@@ -26,8 +26,8 @@ class Api extends CI_Controller {
                 $var->content = $var->content . $this->getBanner();
                 $var->date_created = date("Y-m-d H:i:s");
                 $data = array(
-                    "uuid"          =>  $var->uuid,
-                    "date_created"  =>  $var->date_created,
+                    "uuid"          =>  gen_uuid(),
+                    "date_created"  =>  date("Y-m-d H:i:s"),
                     "sender_name"   =>  ($var->sender_name == null) ? '' : $var->sender_name,
                     "recipients"    =>  $var->recipients,
                     "subject"       =>  $var->subject,
