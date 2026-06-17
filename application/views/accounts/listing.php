@@ -20,7 +20,7 @@
             <tbody>
                 <?php foreach($accounts as $account):?>
                 <?php $is_expired = substr($account->valid_until, 0, 10) < date('Y-m-d'); ?>
-                <tr<?php echo $is_expired ? ' class="table-danger"' : ''; ?>>
+                <tr<?php echo $is_expired ? ' class="table-danger"' : ''; ?> data-uuid="<?php echo $account->uuid; ?>">
                     <td><?php echo $account->company_name;?></td>
                     <td><?php echo $account->domain;?></td>
                     <td><?php echo date_format(date_create(!empty($account->start_date) ? $account->start_date : $account->created_on),'Y-m-d');?></td>
@@ -40,9 +40,13 @@
                         </a>
                         <?php endif;?>
                         <?php if($perms['delete']):?>
-                        <a href="<?php echo base_url("accounts/delete/".$account->uuid);?>">
-                            <div class="btn btn-danger"><i class="fa fa-trash"></i> Delete</div>
-                        </a>
+                        <button type="button"
+                            class="btn btn-danger delete-account"
+                            data-url="<?php echo base_url('accounts/deleteAjax'); ?>"
+                            data-uuid="<?php echo $account->uuid; ?>"
+                            data-message="Are you sure you want to delete the account for <strong><?php echo htmlspecialchars($account->domain); ?></strong> (<?php echo htmlspecialchars($account->company_name); ?>)?">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
                         <?php endif;?>
                     </td>
                 </tr>

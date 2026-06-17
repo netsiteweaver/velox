@@ -161,4 +161,22 @@ class Accounts extends MY_Controller
         $this->load->view("/layouts/default",$this->data);
     }
 
+    public function deleteAjax()
+    {
+        if (!isAuthorised(get_class(), "delete", false)) {
+            echo json_encode(array("result" => false, "reason" => "Not authorized"));
+            exit;
+        }
+
+        $uuid = $this->input->post("uuid");
+        if (empty($uuid)) {
+            echo json_encode(array("result" => false, "reason" => "Account not specified"));
+            exit;
+        }
+
+        $result = $this->accounts_model->delete($uuid);
+        echo json_encode($result);
+        exit;
+    }
+
 }

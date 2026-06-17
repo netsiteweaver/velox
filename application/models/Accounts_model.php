@@ -186,4 +186,24 @@ class Accounts_model extends CI_Model
         return true;
     }
 
+    public function delete($uuid)
+    {
+        $account = $this->db->select("a.id, a.uuid, a.domain, c.company_name")
+            ->from("accounts a")
+            ->join("customers c", "c.customer_id = a.customer_id", "left")
+            ->where(array("a.uuid" => $uuid, "a.status" => "1"))
+            ->get()
+            ->row();
+
+        if (empty($account)) {
+            return array("result" => false, "reason" => "Account not found");
+        }
+
+        $this->db->set("status", "0");
+        $this->db->where("uuid", $uuid);
+        $this->db->update("accounts");
+
+        return array("result" => true, "account" => $account);
+    }
+
 }
